@@ -1,0 +1,1554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lumen · Care Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #070b0f;
+  --surface: #0e1419;
+  --surface2: #141b23;
+  --border: rgba(255,255,255,0.06);
+  --border2: rgba(255,255,255,0.1);
+  --text: #e8edf2;
+  --muted: #5a6a7a;
+  --muted2: #8a9aaa;
+  --teal: #00c4a0;
+  --teal-dim: rgba(0,196,160,0.12);
+  --teal-glow: rgba(0,196,160,0.25);
+  --amber: #f5a623;
+  --amber-dim: rgba(245,166,35,0.1);
+  --rose: #ff6b8a;
+  --rose-dim: rgba(255,107,138,0.1);
+  --blue: #4da9ff;
+  --blue-dim: rgba(77,169,255,0.1);
+  --purple: #a78bfa;
+  --purple-dim: rgba(167,139,250,0.1);
+  --green: #4ade80;
+  --green-dim: rgba(74,222,128,0.1);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Syne', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ── SPLASH ── */
+#splash {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+  padding: 40px 24px;
+}
+
+.splash-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+}
+
+.splash-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+.orb1 { width:500px; height:500px; background:rgba(0,196,160,0.07); top:-100px; left:-100px; }
+.orb2 { width:400px; height:400px; background:rgba(167,139,250,0.06); bottom:-50px; right:-50px; }
+.orb3 { width:300px; height:300px; background:rgba(245,166,35,0.05); top:30%; left:60%; }
+
+.splash-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--teal-dim); border: 1px solid rgba(0,196,160,0.2);
+  border-radius: 50px; padding: 6px 16px;
+  font-family: 'DM Mono', monospace; font-size: 11px; color: var(--teal);
+  letter-spacing: 1px; margin-bottom: 32px;
+  animation: fadeUp 0.6s 0.1s both;
+}
+.badge-dot { width:6px; height:6px; border-radius:50%; background:var(--teal); animation: pulse 2s infinite; }
+
+.splash-title {
+  font-size: clamp(52px, 9vw, 110px);
+  font-weight: 800; line-height: 0.92;
+  letter-spacing: -4px; text-align: center;
+  margin-bottom: 24px;
+  animation: fadeUp 0.7s 0.2s both;
+}
+.splash-title .t1 { color: var(--text); display: block; }
+.splash-title .t2 { 
+  color: transparent;
+  background: linear-gradient(135deg, var(--teal), var(--blue), var(--purple));
+  -webkit-background-clip: text; background-clip: text;
+  display: block; font-family: 'Instrument Serif', serif; font-style: italic;
+}
+
+.splash-sub {
+  font-size: 16px; color: var(--muted2); text-align: center;
+  max-width: 480px; line-height: 1.7; font-weight: 400;
+  margin-bottom: 56px;
+  animation: fadeUp 0.7s 0.3s both;
+}
+
+.role-cards {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px; width: 100%; max-width: 860px;
+  animation: fadeUp 0.7s 0.4s both;
+}
+
+.role-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 28px 24px;
+  cursor: pointer; text-align: left;
+  transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+  position: relative; overflow: hidden;
+  font-family: inherit;
+}
+.role-card::before {
+  content: ''; position: absolute;
+  inset: 0; border-radius: 20px;
+  opacity: 0; transition: opacity 0.3s;
+}
+.role-card.patient::before { background: radial-gradient(ellipse at 0% 0%, rgba(245,166,35,0.08), transparent 60%); }
+.role-card.caregiver::before { background: radial-gradient(ellipse at 0% 0%, rgba(0,196,160,0.08), transparent 60%); }
+.role-card.researcher::before { background: radial-gradient(ellipse at 0% 0%, rgba(167,139,250,0.08), transparent 60%); }
+.role-card:hover { transform: translateY(-4px); border-color: var(--border2); }
+.role-card:hover::before { opacity: 1; }
+.role-card.patient:hover { box-shadow: 0 20px 40px rgba(245,166,35,0.08); }
+.role-card.caregiver:hover { box-shadow: 0 20px 40px rgba(0,196,160,0.08); }
+.role-card.researcher:hover { box-shadow: 0 20px 40px rgba(167,139,250,0.08); }
+
+.role-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 18px;
+}
+.role-card.patient .role-icon { background: var(--amber-dim); }
+.role-card.caregiver .role-icon { background: var(--teal-dim); }
+.role-card.researcher .role-icon { background: var(--purple-dim); }
+
+.role-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 2px;
+  text-transform: uppercase; margin-bottom: 6px;
+}
+.role-card.patient .role-label { color: var(--amber); }
+.role-card.caregiver .role-label { color: var(--teal); }
+.role-card.researcher .role-label { color: var(--purple); }
+
+.role-title { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+.role-desc { font-size: 13px; color: var(--muted2); line-height: 1.6; font-weight: 400; }
+.role-arrow {
+  position: absolute; bottom: 24px; right: 24px;
+  font-size: 18px; color: var(--muted); transition: all 0.2s;
+}
+.role-card:hover .role-arrow { color: var(--text); transform: translateX(4px); }
+
+.splash-foot {
+  margin-top: 48px; font-family: 'DM Mono', monospace;
+  font-size: 11px; color: var(--muted); text-align: center; letter-spacing: 1px;
+  animation: fadeUp 0.7s 0.5s both;
+}
+
+/* ── APP SHELL ── */
+#app { display: none; min-height: 100vh; }
+
+.app-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 56px;
+  background: rgba(7,11,15,0.9); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; padding: 0 24px;
+  gap: 0;
+}
+.app-nav-logo {
+  font-size: 16px; font-weight: 800; color: var(--text);
+  letter-spacing: -0.5px; margin-right: 32px; white-space: nowrap;
+}
+.app-nav-logo span { color: var(--teal); }
+.nav-tabs { display: flex; gap: 2px; flex: 1; }
+.nav-tab {
+  padding: 6px 14px; border-radius: 8px; border: none;
+  background: transparent; color: var(--muted2); cursor: pointer;
+  font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
+  transition: all 0.2s; white-space: nowrap;
+}
+.nav-tab.active { background: var(--surface2); color: var(--text); }
+.nav-tab:hover:not(.active) { color: var(--text); }
+.nav-right { display: flex; align-items: center; gap: 12px; margin-left: auto; }
+.watch-pill {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--green-dim); border: 1px solid rgba(74,222,128,0.2);
+  border-radius: 50px; padding: 4px 12px;
+  font-family: 'DM Mono', monospace; font-size: 11px; color: var(--green);
+}
+.watch-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+.back-btn {
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--muted2); padding: 6px 14px; border-radius: 8px;
+  font-family: 'Syne', sans-serif; font-size: 13px; cursor: pointer;
+  transition: all 0.2s;
+}
+.back-btn:hover { color: var(--text); border-color: var(--border2); }
+
+.app-body { padding-top: 56px; }
+
+/* ── SHARED COMPONENTS ── */
+.page { display: none; padding: 32px 28px; max-width: 1400px; margin: 0 auto; }
+.page.active { display: block; }
+
+.page-header { margin-bottom: 32px; }
+.page-eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--teal); letter-spacing: 2px; margin-bottom: 8px; }
+.page-title { font-size: 32px; font-weight: 800; letter-spacing: -1px; color: var(--text); }
+.page-title span { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--teal); }
+.page-sub { font-size: 14px; color: var(--muted2); margin-top: 6px; font-weight: 400; }
+
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px;
+}
+.card-title {
+  font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; color: var(--muted2); margin-bottom: 20px;
+}
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.grid4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; }
+
+/* ── METRIC CARD ── */
+.metric-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px 22px;
+  position: relative; overflow: hidden; transition: all 0.2s;
+}
+.metric-card:hover { border-color: var(--border2); }
+.metric-card::after {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+}
+.metric-card.teal::after { background: linear-gradient(90deg, var(--teal), transparent); }
+.metric-card.amber::after { background: linear-gradient(90deg, var(--amber), transparent); }
+.metric-card.rose::after { background: linear-gradient(90deg, var(--rose), transparent); }
+.metric-card.blue::after { background: linear-gradient(90deg, var(--blue), transparent); }
+.metric-card.purple::after { background: linear-gradient(90deg, var(--purple), transparent); }
+.metric-card.green::after { background: linear-gradient(90deg, var(--green), transparent); }
+
+.metric-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 1px; margin-bottom: 8px; }
+.metric-val { font-size: 36px; font-weight: 800; letter-spacing: -2px; line-height: 1; margin-bottom: 4px; }
+.metric-val.teal { color: var(--teal); }
+.metric-val.amber { color: var(--amber); }
+.metric-val.rose { color: var(--rose); }
+.metric-val.blue { color: var(--blue); }
+.metric-val.purple { color: var(--purple); }
+.metric-val.green { color: var(--green); }
+.metric-sub { font-size: 12px; color: var(--muted2); font-weight: 400; }
+.metric-badge {
+  position: absolute; top: 20px; right: 20px;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  padding: 3px 8px; border-radius: 4px; font-weight: 500;
+}
+.badge-up { background: var(--green-dim); color: var(--green); }
+.badge-down { background: var(--rose-dim); color: var(--rose); }
+.badge-neutral { background: var(--amber-dim); color: var(--amber); }
+
+/* ── MINI CHART ── */
+.sparkline { display: flex; align-items: flex-end; gap: 3px; height: 40px; margin-top: 12px; }
+.spark-bar { flex: 1; border-radius: 2px 2px 0 0; min-height: 4px; opacity: 0.8; transition: opacity 0.2s; }
+.spark-bar:hover { opacity: 1; }
+
+/* ── HRV WAVE ── */
+.hrv-wave { height: 64px; position: relative; overflow: hidden; margin-top: 12px; }
+.hrv-svg { width: 100%; height: 100%; }
+
+/* ── TABLE ── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th {
+  text-align: left; padding: 10px 14px;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 1px; color: var(--muted); border-bottom: 1px solid var(--border);
+  font-weight: 400;
+}
+.data-table td { padding: 12px 14px; border-bottom: 1px solid var(--border); color: var(--muted2); vertical-align: middle; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(255,255,255,0.02); color: var(--text); }
+.data-table td:first-child { color: var(--text); font-weight: 600; }
+
+/* ── STATUS PILL ── */
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 50px;
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 500;
+}
+.pill.good { background: var(--green-dim); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
+.pill.warn { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,166,35,0.2); }
+.pill.alert { background: var(--rose-dim); color: var(--rose); border: 1px solid rgba(255,107,138,0.2); }
+.pill.info { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(77,169,255,0.2); }
+.pill-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+/* ── SLEEP CHART ── */
+.sleep-chart { height: 80px; position: relative; margin-top: 12px; }
+.sleep-stages { display: flex; height: 100%; }
+.sleep-block { height: 100%; position: relative; display: flex; align-items: center; justify-content: center; }
+.sleep-block:first-child { border-radius: 6px 0 0 6px; }
+.sleep-block:last-child { border-radius: 0 6px 6px 0; }
+.sleep-label { font-family: 'DM Mono', monospace; font-size: 9px; color: rgba(255,255,255,0.5); letter-spacing: 0.5px; writing-mode: vertical-rl; }
+
+/* ── BUTTON ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: 10px; border: none;
+  font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s; letter-spacing: 0.3px;
+}
+.btn-primary { background: var(--teal); color: #000; }
+.btn-primary:hover { background: #00ddb4; box-shadow: 0 0 20px rgba(0,196,160,0.3); }
+.btn-ghost { background: var(--surface2); color: var(--muted2); border: 1px solid var(--border); }
+.btn-ghost:hover { color: var(--text); border-color: var(--border2); }
+.btn-amber { background: var(--amber); color: #000; }
+.btn-amber:hover { background: #ffb93a; box-shadow: 0 0 20px rgba(245,166,35,0.3); }
+
+/* ── PATIENT SCREEN ── */
+.patient-phone {
+  max-width: 400px; margin: 0 auto;
+  background: #0a0a0a; border-radius: 40px; padding: 10px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.patient-screen {
+  background: #fff8f0; border-radius: 32px; overflow: hidden; min-height: 700px;
+  position: relative; color: #1a0800;
+}
+.ps-status {
+  background: #1a0800; padding: 36px 18px 10px;
+  display: flex; justify-content: space-between;
+  font-size: 10px; color: rgba(255,248,230,0.5);
+}
+.ps-status span:nth-child(2) { color: #f5a623; font-weight: 700; font-family: 'DM Mono', monospace; }
+.ps-body { padding: 16px; }
+.ps-hello { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.ps-name { font-size: 26px; font-weight: 800; color: #1a0800; letter-spacing: -0.5px; }
+.ps-date { font-size: 11px; color: #8a6040; margin-top: 2px; }
+.ps-watch {
+  background: linear-gradient(135deg, #1a0800, #2d1200);
+  border-radius: 16px; padding: 16px; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 14px;
+  border: 1px solid rgba(245,166,35,0.2);
+}
+.ps-watch-ring {
+  width: 52px; height: 52px; border-radius: 50%;
+  border: 3px solid #f5a623; display: flex; align-items: center;
+  justify-content: center; font-size: 22px; flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(245,166,35,0.3);
+}
+.ps-watch-info { flex: 1; }
+.ps-watch-label { font-size: 9px; color: rgba(255,166,35,0.6); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 3px; font-family: 'DM Mono', monospace; }
+.ps-watch-val { font-size: 22px; font-weight: 800; color: #f5a623; line-height: 1; }
+.ps-watch-sub { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+.ps-carousel {
+  border-radius: 18px; padding: 22px; text-align: center;
+  margin-bottom: 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+.ps-fam-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.ps-fam-btn {
+  border-radius: 14px; padding: 12px 6px; border: 2px solid transparent;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  cursor: pointer; font-family: 'Syne', sans-serif; transition: transform 0.15s;
+}
+.ps-fam-btn:hover { transform: scale(1.04); }
+.ps-fam-name { font-size: 12px; font-weight: 700; color: #1a0800; }
+.ps-routine { display: flex; gap: 8px; margin-bottom: 12px; }
+.ps-routine-item {
+  flex: 1; background: #fff; border-radius: 12px; padding: 10px 6px;
+  text-align: center; font-size: 11px; color: #555; border: 1px solid #eee;
+}
+.ps-sos {
+  width: 100%; padding: 16px; background: #c0392b; color: #fff;
+  border: none; border-radius: 14px; font-size: 16px; font-weight: 800;
+  cursor: pointer; font-family: 'Syne', sans-serif;
+}
+.ps-nav {
+  background: #1a0800; display: flex; justify-content: space-around;
+  padding: 12px 0 14px; margin: 0 -16px -16px;
+}
+.ps-nav-btn {
+  background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer;
+  font-size: 18px; display: flex; flex-direction: column; align-items: center;
+  gap: 2px; font-family: 'Syne', sans-serif;
+}
+.ps-nav-btn span { font-size: 9px; color: #f5a623; }
+
+/* ── CHECKIN OVERLAY ── */
+.checkin-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,0.75); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+}
+.checkin-modal {
+  background: #fff; border-radius: 28px; padding: 32px 24px; width: 340px;
+  text-align: center; box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+  animation: popIn 0.35s cubic-bezier(0.16,1,0.3,1);
+  color: #1a0800;
+}
+.checkin-watch-strip {
+  background: linear-gradient(135deg, #1a0800, #2d1200);
+  border-radius: 14px; padding: 14px; margin-bottom: 20px;
+  display: flex; justify-content: space-around;
+}
+.cwv { text-align: center; }
+.cwv-val { font-size: 20px; font-weight: 800; color: #f5a623; }
+.cwv-label { font-size: 9px; color: rgba(255,255,255,0.4); margin-top: 2px; font-family: 'DM Mono', monospace; letter-spacing: 0.5px; }
+.checkin-q { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+.checkin-faces { display: flex; gap: 12px; margin: 14px 0; }
+.checkin-face-btn {
+  flex: 1; border-radius: 16px; padding: 14px 10px; border: none;
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  cursor: pointer; font-family: 'Syne', sans-serif; transition: transform 0.15s;
+}
+.checkin-face-btn:hover { transform: scale(1.05); }
+.checkin-face-btn span { font-size: 46px; display: block; }
+.checkin-face-btn p { font-size: 13px; font-weight: 700; color: #1a0800; margin: 0; }
+
+/* ── ANNOTATIONS ── */
+.annot {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  color: var(--muted); letter-spacing: 0.5px;
+}
+
+/* ── SECTION DIVIDER ── */
+.section-gap { margin-bottom: 24px; }
+
+/* ── EXPORT BAR ── */
+.export-bar {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+}
+.export-info { font-size: 13px; color: var(--muted2); }
+.export-info strong { color: var(--text); }
+.export-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* ── PARTICIPANT ROW ── */
+.participant-detail {
+  display: grid; grid-template-columns: 200px 1fr; gap: 24px;
+}
+.participant-sidebar {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px; height: fit-content;
+}
+.p-avatar {
+  width: 64px; height: 64px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin-bottom: 14px;
+  background: var(--amber-dim); border: 1px solid rgba(245,166,35,0.2);
+}
+.p-id { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 500; color: var(--text); margin-bottom: 4px; }
+.p-meta { font-size: 12px; color: var(--muted2); line-height: 1.8; }
+
+/* ── CORR MATRIX ── */
+.corr-matrix { display: grid; gap: 4px; }
+.corr-row { display: flex; gap: 4px; }
+.corr-cell {
+  width: 100%; aspect-ratio: 1; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+@keyframes popIn { from { transform:scale(0.88) translateY(16px); opacity:0; } to { transform:none; opacity:1; } }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
+@keyframes waveMove { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+@keyframes slideIn { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:none; } }
+
+/* ── CAREGIVER ALERTS ── */
+.alert-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 16px; border-radius: 12px; margin-bottom: 8px;
+  border: 1px solid var(--border); background: var(--surface2);
+  cursor: pointer; transition: all 0.2s;
+}
+.alert-item:hover { border-color: var(--border2); }
+.alert-item.unread { border-color: rgba(255,107,138,0.2); background: rgba(255,107,138,0.04); }
+.alert-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.alert-msg { font-size: 13px; color: var(--text); line-height: 1.5; margin-bottom: 3px; }
+.alert-time { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); }
+.alert-unread-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--rose); flex-shrink: 0; margin-top: 6px; }
+
+/* ── PROGRESS BAR ── */
+.progress-track { height: 6px; background: var(--surface2); border-radius: 6px; overflow: hidden; margin-top: 8px; }
+.progress-fill { height: 100%; border-radius: 6px; transition: width 0.5s; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+@media (max-width: 900px) {
+  .role-cards { grid-template-columns: 1fr; max-width: 400px; }
+  .grid4, .grid3 { grid-template-columns: 1fr 1fr; }
+  .grid2 { grid-template-columns: 1fr; }
+  .page { padding: 20px 16px; }
+  .participant-detail { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SPLASH ══════════════════════════════════════════════════════════════ -->
+<div id="splash">
+  <div class="splash-grid"></div>
+  <div class="splash-orb orb1"></div>
+  <div class="splash-orb orb2"></div>
+  <div class="splash-orb orb3"></div>
+
+  <div class="splash-badge">
+    <div class="badge-dot"></div>
+    LUMEN PLATFORM v2.1
+  </div>
+
+  <h1 class="splash-title">
+    <span class="t2">Lumen</span>
+  </h1>
+
+  <p class="splash-sub">A trimodal platform connecting patients, caregivers, and researchers through wearable biometrics, emotional check-ins, and longitudinal data.</p>
+
+  <div class="role-cards">
+    <div class="role-card patient" onclick="launch('patient')">
+      <div class="role-icon">🧓</div>
+      <div class="role-label">Patient Interface</div>
+      <div class="role-title">Daily Companion</div>
+      <div class="role-desc">Family check-ins, voice prompts, watch vitals at a glance. Designed for ease and comfort.</div>
+      <div class="role-arrow">→</div>
+    </div>
+    <div class="role-card caregiver" onclick="launch('caregiver')">
+      <div class="role-icon">🩺</div>
+      <div class="role-label">Caregiver Dashboard</div>
+      <div class="role-title">Care Command</div>
+      <div class="role-desc">Real-time alerts, biometric feeds, mood history, and team coordination in one view.</div>
+      <div class="role-arrow">→</div>
+    </div>
+    <div class="role-card researcher" onclick="launch('researcher')">
+      <div class="role-icon">🔬</div>
+      <div class="role-label">Researcher Portal</div>
+      <div class="role-title">Data & Analysis</div>
+      <div class="role-desc">Cohort overview, HRV/sleep longitudinal trends, correlation matrices, and BIDS export.</div>
+      <div class="role-arrow">→</div>
+    </div>
+  </div>
+
+  <div class="splash-foot">
+    DATA ENCRYPTED AT REST · BIDS COMPATIBLE · v2.1.4
+  </div>
+</div>
+
+<!-- ══ APP SHELL ═══════════════════════════════════════════════════════════ -->
+<div id="app">
+  <nav class="app-nav">
+    <div class="app-nav-logo"><em style="font-style:italic;color:var(--teal)">Lumen</em></div>
+    <div class="nav-tabs" id="navTabs"></div>
+    <div class="nav-right">
+      <div class="watch-pill"><div class="watch-dot"></div>Watch Connected</div>
+      <button class="back-btn" onclick="goSplash()">← Switch Role</button>
+    </div>
+  </nav>
+  <div class="app-body">
+    <div id="patientView" class="page"></div>
+    <div id="caregiverView" class="page"></div>
+    <div id="researcherView" class="page"></div>
+  </div>
+</div>
+
+<script>
+// ══ DATA ════════════════════════════════════════════════════════════════════
+const participants = [
+  { id:'PT-1001', age:72, sex:'F', stage:'MCI', watch:'Apple Watch Ultra', hrv:38, spo2:96, hr:68, sleep:6.2, sleepEff:74, deepPct:14, remPct:18, stress:'Moderate', status:'stable', lastSync:'2 min ago', weeks:12 },
+  { id:'PT-1002', age:78, sex:'M', stage:'Mild AD', watch:'Samsung Galaxy Watch 6', hrv:28, spo2:94, hr:74, sleep:5.1, sleepEff:61, deepPct:9, remPct:13, stress:'High', status:'alert', lastSync:'8 min ago', weeks:18 },
+  { id:'PT-1003', age:65, sex:'F', stage:'MCI', watch:'Apple Watch S9', hrv:52, spo2:98, hr:62, sleep:7.1, sleepEff:82, deepPct:20, remPct:22, stress:'Low', status:'stable', lastSync:'1 min ago', weeks:8 },
+  { id:'PT-1004', age:81, sex:'M', stage:'Moderate AD', watch:'Fitbit Sense 2', hrv:19, spo2:92, hr:82, sleep:4.4, sleepEff:52, deepPct:6, remPct:10, stress:'High', status:'critical', lastSync:'34 min ago', weeks:24 },
+  { id:'PT-1005', age:69, sex:'F', stage:'MCI', watch:'Apple Watch Ultra', hrv:44, spo2:97, hr:65, sleep:6.8, sleepEff:78, deepPct:17, remPct:20, stress:'Low', status:'stable', lastSync:'5 min ago', weeks:6 },
+];
+
+const moodHistory7 = [3.2, 3.8, 2.9, 4.1, 3.6, 2.4, 3.9];
+const hrvHistory14 = [42,38,44,36,41,33,38,29,34,28,31,26,28,24];
+const sleepHistory14 = [6.8,5.9,7.1,5.4,6.2,4.8,5.6,4.2,5.1,4.6,4.9,4.1,4.4,4.2];
+
+// ══ NAV ═════════════════════════════════════════════════════════════════════
+let currentRole = '';
+const roleTabs = {
+  patient: [['home','Home'],['vitals','Vitals'],['family','Family']],
+  caregiver: [['overview','Overview'],['biometrics','Biometrics'],['alerts','Alerts'],['team','Team']],
+  researcher: [['cohort','Cohort'],['biometrics','Biometrics'],['longitudinal','Trends'],['export','Export']]
+};
+
+function launch(role) {
+  currentRole = role;
+  document.getElementById('splash').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  buildNav(role);
+  showTab(roleTabs[role][0][0]);
+}
+
+function goSplash() {
+  document.getElementById('splash').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  ['patientView','caregiverView','researcherView'].forEach(id => {
+    document.getElementById(id).classList.remove('active');
+  });
+}
+
+function buildNav(role) {
+  const tabs = roleTabs[role];
+  document.getElementById('navTabs').innerHTML = tabs.map(([id,label]) =>
+    `<button class="nav-tab" id="tab-${id}" onclick="showTab('${id}')">${label}</button>`
+  ).join('');
+}
+
+function showTab(tabId) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  const btn = document.getElementById('tab-'+tabId);
+  if (btn) btn.classList.add('active');
+  renderTab(tabId);
+}
+
+function renderTab(id) {
+  if (currentRole === 'patient') {
+    const el = document.getElementById('patientView');
+    ['patientView','caregiverView','researcherView'].forEach(v => document.getElementById(v).classList.remove('active'));
+    el.classList.add('active');
+    if (id === 'home') renderPatientHome(el);
+    else if (id === 'vitals') renderPatientVitals(el);
+    else if (id === 'family') renderPatientFamily(el);
+  } else if (currentRole === 'caregiver') {
+    const el = document.getElementById('caregiverView');
+    ['patientView','caregiverView','researcherView'].forEach(v => document.getElementById(v).classList.remove('active'));
+    el.classList.add('active');
+    if (id === 'overview') renderCareOverview(el);
+    else if (id === 'biometrics') renderCareBiometrics(el);
+    else if (id === 'alerts') renderCareAlerts(el);
+    else if (id === 'team') renderCareTeam(el);
+  } else if (currentRole === 'researcher') {
+    const el = document.getElementById('researcherView');
+    ['patientView','caregiverView','researcherView'].forEach(v => document.getElementById(v).classList.remove('active'));
+    el.classList.add('active');
+    if (id === 'cohort') renderCohort(el);
+    else if (id === 'biometrics') renderResearchBio(el);
+    else if (id === 'longitudinal') renderLongitudinal(el);
+    else if (id === 'export') renderExport(el);
+  }
+}
+
+// ══ PATIENT ════════════════════════════════════════════════════════════════
+let pCarIdx = 0;
+const pFam = [
+  {name:'Sarah',rel:'Loving Wife',emoji:'👩',bg:'#E8C5A0',ac:'#C4956A',msg:"Hi sweetheart, it's Sarah. I love you so much!"},
+  {name:'James',rel:'Sweet Son',emoji:'👨',bg:'#A8C5E0',ac:'#5A95C4',msg:"Hey Dad! It's James. Big hug!"},
+  {name:'Emma',rel:'Dear Daughter',emoji:'👧',bg:'#C5E0A8',ac:'#7AC45A',msg:"Papa, it's Emma! Love you lots!"}
+];
+
+function renderPatientHome(el) {
+  el.innerHTML = `
+  <div style="max-width:440px;margin:0 auto">
+    <div class="patient-phone">
+      <div class="patient-screen">
+        <div class="ps-status">
+          <span>📶 Safe · Home</span><span>Lumen</span><span>🔋 91%</span>
+        </div>
+        <div class="ps-body">
+          <div class="ps-hello">
+            <span style="font-size:34px">☀️</span>
+            <div>
+              <div class="ps-name">Hello, George</div>
+              <div class="ps-date">${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
+            </div>
+          </div>
+
+          <div class="ps-watch">
+            <div class="ps-watch-ring">⌚</div>
+            <div class="ps-watch-info">
+              <div class="ps-watch-label">Live Watch Data</div>
+              <div class="ps-watch-val">❤️ 68 <span style="font-size:14px">bpm</span></div>
+              <div class="ps-watch-sub">HRV 38ms · SpO₂ 96% · Stress: Calm</div>
+            </div>
+          </div>
+
+          <div class="ps-carousel" id="pCarousel" style="background:${pFam[pCarIdx].bg}">
+            <div style="font-size:70px" id="pEmoji">${pFam[pCarIdx].emoji}</div>
+            <div style="font-size:12px;color:#876540;font-style:italic;margin-top:4px" id="pRel">${pFam[pCarIdx].rel}</div>
+            <div style="font-size:20px;font-weight:800;color:#1a0800" id="pName">${pFam[pCarIdx].name}</div>
+          </div>
+
+          <div class="ps-fam-grid">
+            ${pFam.map((m,i)=>`
+            <button class="ps-fam-btn" style="background:${m.bg};border-color:${m.ac}" onclick="showCheckin()">
+              <span style="font-size:38px">${m.emoji}</span>
+              <div class="ps-fam-name">${m.name}</div>
+            </button>`).join('')}
+          </div>
+
+          <div class="ps-routine">
+            <div class="ps-routine-item">💊<br/><span style="color:#4ade80;font-weight:700;font-size:10px">✓ Done</span></div>
+            <div class="ps-routine-item">🥣<br/><span style="color:#f5a623;font-weight:700;font-size:10px">2:00 PM</span></div>
+            <div class="ps-routine-item">🌙<br/><span style="color:#a78bfa;font-weight:700;font-size:10px">8:00 PM</span></div>
+          </div>
+
+          <button class="ps-sos" onclick="alert('🚨 SOS sent — location shared with all caregivers')">🆘 I Need Help</button>
+
+          <div class="ps-nav" style="margin-top:16px">
+            <button class="ps-nav-btn" onclick="showTab('home')">🏠<span>Home</span></button>
+            <button class="ps-nav-btn" onclick="showTab('vitals')">💓<span>Vitals</span></button>
+            <button class="ps-nav-btn" onclick="showCheckin()">🔔<span>Check-In</span></button>
+            <button class="ps-nav-btn" onclick="showTab('family')">👨‍👩‍👧<span>Family</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  clearInterval(window._pCar);
+  window._pCar = setInterval(()=>{
+    pCarIdx = (pCarIdx+1)%pFam.length;
+    const m = pFam[pCarIdx];
+    const c = document.getElementById('pCarousel');
+    if (!c) return;
+    document.getElementById('pEmoji').textContent = m.emoji;
+    document.getElementById('pRel').textContent = m.rel;
+    document.getElementById('pName').textContent = m.name;
+    c.style.background = m.bg;
+  }, 3000);
+
+  clearTimeout(window._pCheckin);
+  window._pCheckin = setTimeout(showCheckin, 5000);
+}
+
+function renderPatientVitals(el) {
+  el.innerHTML = `
+  <div style="max-width:440px;margin:0 auto">
+    <div style="padding:0 0 24px">
+      <div class="page-eyebrow">YOUR WATCH · LIVE DATA</div>
+      <div style="font-size:28px;font-weight:800;color:var(--text);letter-spacing:-1px">Your <span style="color:var(--teal);font-style:italic;font-family:'Instrument Serif',serif">Vitals</span></div>
+    </div>
+    <div class="grid2 section-gap">
+      <div class="metric-card teal">
+        <div class="metric-label">HEART RATE</div>
+        <div class="metric-val teal">68</div>
+        <div class="metric-sub">bpm · Resting</div>
+        <div class="sparkline">${[64,67,66,68,70,68,67,68].map(v=>`<div class="spark-bar" style="height:${(v-60)/15*100}%;background:var(--teal)"></div>`).join('')}</div>
+      </div>
+      <div class="metric-card amber">
+        <div class="metric-label">HRV</div>
+        <div class="metric-val amber">38</div>
+        <div class="metric-sub">ms · Good range</div>
+        <div class="sparkline">${[42,40,38,41,36,38,37,38].map(v=>`<div class="spark-bar" style="height:${v/50*100}%;background:var(--amber)"></div>`).join('')}</div>
+      </div>
+      <div class="metric-card blue">
+        <div class="metric-label">SpO₂</div>
+        <div class="metric-val blue">96%</div>
+        <div class="metric-sub">Blood oxygen · Normal</div>
+        <div class="sparkline">${[96,97,96,95,96,97,96,96].map(v=>`<div class="spark-bar" style="height:${(v-93)/7*100}%;background:var(--blue)"></div>`).join('')}</div>
+      </div>
+      <div class="metric-card purple">
+        <div class="metric-label">LAST NIGHT SLEEP</div>
+        <div class="metric-val purple">6.2<span style="font-size:18px">h</span></div>
+        <div class="metric-sub">74% efficiency</div>
+        <div class="sparkline">${[6.8,5.9,7.1,5.4,6.2,5.8,6.2].map(v=>`<div class="spark-bar" style="height:${v/8*100}%;background:var(--purple)"></div>`).join('')}</div>
+      </div>
+    </div>
+    <div class="card section-gap">
+      <div class="card-title">SLEEP STAGES — LAST NIGHT</div>
+      <div class="sleep-chart">
+        <div class="sleep-stages">
+          <div class="sleep-block" style="width:15%;background:rgba(167,139,250,0.3)"><span class="sleep-label">AWAKE</span></div>
+          <div class="sleep-block" style="width:30%;background:rgba(77,169,255,0.2)"><span class="sleep-label">LIGHT</span></div>
+          <div class="sleep-block" style="width:14%;background:rgba(0,196,160,0.4)"><span class="sleep-label">DEEP</span></div>
+          <div class="sleep-block" style="width:20%;background:rgba(77,169,255,0.2)"><span class="sleep-label">LIGHT</span></div>
+          <div class="sleep-block" style="width:18%;background:rgba(167,139,250,0.5)"><span class="sleep-label">REM</span></div>
+          <div class="sleep-block" style="width:3%;background:rgba(255,107,138,0.3)"><span class="sleep-label"></span></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:14px;flex-wrap:wrap">
+        ${[['🟣','Awake','15%'],['🔵','Light','50%'],['🟢','Deep','14%'],['💜','REM','18%']].map(([e,l,v])=>`<div style="font-size:12px;color:var(--muted2)">${e} ${l} <strong style="color:var(--text)">${v}</strong></div>`).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">STRESS SCORE</div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <div style="font-size:42px;font-weight:800;color:var(--amber)">Calm</div>
+        <div style="flex:1">
+          <div style="font-size:12px;color:var(--muted2);margin-bottom:6px">Based on HRV & heart rate patterns</div>
+          <div class="progress-track"><div class="progress-fill" style="width:35%;background:linear-gradient(90deg,var(--teal),var(--amber))"></div></div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted);margin-top:4px"><span>Calm</span><span>Stressed</span></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderPatientFamily(el) {
+  el.innerHTML = `
+  <div style="max-width:440px;margin:0 auto">
+    <div style="padding:0 0 24px">
+      <div class="page-eyebrow">CONNECTIONS</div>
+      <div style="font-size:28px;font-weight:800;color:var(--text);letter-spacing:-1px">Your <span style="color:var(--amber);font-style:italic;font-family:'Instrument Serif',serif">Family</span></div>
+    </div>
+    ${pFam.map(m=>`
+    <div style="background:${m.bg}22;border:1px solid ${m.ac}33;border-radius:20px;padding:20px;margin-bottom:14px;display:flex;align-items:center;gap:16px">
+      <div style="width:64px;height:64px;border-radius:16px;background:${m.bg};display:flex;align-items:center;justify-content:center;font-size:34px;border:2px solid ${m.ac};flex-shrink:0">${m.emoji}</div>
+      <div style="flex:1">
+        <div style="font-size:18px;font-weight:800;color:var(--text)">${m.name}</div>
+        <div style="font-size:13px;color:var(--muted2);font-style:italic;margin-bottom:8px">${m.rel}</div>
+        <div style="display:flex;gap:8px">
+          <button onclick="alert('📞 Calling ${m.name}...')" style="background:${m.ac};color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif">📞 Call</button>
+          <button onclick="alert('🎵 ${m.msg}')" style="background:var(--surface2);color:var(--muted2);border:1px solid var(--border);border-radius:8px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Syne',sans-serif">🎵 Message</button>
+        </div>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function showCheckin() {
+  const overlay = document.createElement('div');
+  overlay.className = 'checkin-overlay';
+  overlay.innerHTML = `
+    <div class="checkin-modal">
+      <div class="checkin-watch-strip">
+        <div class="cwv"><div class="cwv-val">68</div><div class="cwv-label">BPM</div></div>
+        <div class="cwv"><div class="cwv-val">38</div><div class="cwv-label">HRV ms</div></div>
+        <div class="cwv"><div class="cwv-val">96%</div><div class="cwv-label">SpO₂</div></div>
+      </div>
+      <div style="font-size:36px;margin-bottom:8px">🔔</div>
+      <div class="checkin-q">Hey George, feeling okay?</div>
+      <div style="font-size:13px;color:#888;margin-bottom:8px">Tap a face to let us know 💛</div>
+      <div class="checkin-faces">
+        <button class="checkin-face-btn" style="background:#E8C5A0" onclick="tapCheckin('Sarah','Hi sweetheart, it\\'s Sarah! I love you so much.',this.closest('.checkin-overlay'))">
+          <span>👩</span><p>Sarah</p>
+        </button>
+        <button class="checkin-face-btn" style="background:#A8C5E0" onclick="tapCheckin('James','Hey Dad! It\\'s James. Thinking of you!',this.closest('.checkin-overlay'))">
+          <span>👨</span><p>James</p>
+        </button>
+      </div>
+      <div id="ciMsg"></div>
+      <button onclick="this.closest('.checkin-overlay').remove()" style="margin-top:14px;font-size:12px;color:#bbb;background:none;border:none;cursor:pointer;font-family:'Syne',sans-serif">Skip for now</button>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+
+function tapCheckin(name, msg, overlay) {
+  document.getElementById('ciMsg').innerHTML = `
+    <div style="background:#FFF9E6;border-radius:12px;padding:12px;margin-top:14px;border:1px solid #FFE082">
+      🎵 <em style="font-size:13px;color:#555">${msg}</em>
+    </div>`;
+  setTimeout(()=>{ if(overlay.parentNode) overlay.remove(); },3500);
+}
+
+// ══ CAREGIVER ══════════════════════════════════════════════════════════════
+function renderCareOverview(el) {
+  const pt = participants[0];
+  el.innerHTML = `
+  <div class="page-header">
+    <div class="page-eyebrow">GEORGE THOMAS · PT-1001</div>
+    <div class="page-title">Care <span>Overview</span></div>
+    <div class="page-sub">Real-time watch data + mood · Updated ${pt.lastSync}</div>
+  </div>
+
+  <div class="grid4 section-gap">
+    <div class="metric-card teal">
+      <div class="metric-label">HEART RATE</div>
+      <div class="metric-val teal">${pt.hr}</div>
+      <div class="metric-sub">bpm · Resting</div>
+      <div class="metric-badge badge-up">↓ 4 from yesterday</div>
+    </div>
+    <div class="metric-card amber">
+      <div class="metric-label">HRV</div>
+      <div class="metric-val amber">${pt.hrv}</div>
+      <div class="metric-sub">ms · ${pt.stress} stress</div>
+      <div class="metric-badge badge-down">↓ 6 this week</div>
+    </div>
+    <div class="metric-card blue">
+      <div class="metric-label">SpO₂</div>
+      <div class="metric-val blue">${pt.spo2}%</div>
+      <div class="metric-sub">Blood oxygen</div>
+      <div class="metric-badge badge-neutral">Stable</div>
+    </div>
+    <div class="metric-card purple">
+      <div class="metric-label">SLEEP LAST NIGHT</div>
+      <div class="metric-val purple">${pt.sleep}<span style="font-size:18px">h</span></div>
+      <div class="metric-sub">${pt.sleepEff}% efficiency</div>
+      <div class="metric-badge badge-down">↓ 0.8h vs avg</div>
+    </div>
+  </div>
+
+  <div class="grid2 section-gap">
+    <div class="card">
+      <div class="card-title">MOOD — LAST 7 DAYS</div>
+      <div style="display:flex;align-items:flex-end;gap:8px;height:80px">
+        ${moodHistory7.map((v,i)=>{
+          const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+          const col = v>=4?'var(--teal)':v>=3?'var(--amber)':'var(--rose)';
+          return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="flex:1;width:100%;background:${col};border-radius:4px 4px 0 0;height:${v/5*100}%;min-height:6px;opacity:0.85"></div>
+            <div style="font-size:9px;color:var(--muted);font-family:'DM Mono',monospace">${days[i]}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <span style="font-size:11px;color:var(--teal)">● Good ≥4</span>
+        <span style="font-size:11px;color:var(--amber)">● Neutral 3</span>
+        <span style="font-size:11px;color:var(--rose)">● Low ≤2</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">SLEEP STAGES — LAST NIGHT</div>
+      <div class="sleep-chart">
+        <div class="sleep-stages">
+          <div class="sleep-block" style="width:12%;background:rgba(255,107,138,0.2)"><span class="sleep-label">WAKE</span></div>
+          <div class="sleep-block" style="width:35%;background:rgba(77,169,255,0.15)"><span class="sleep-label">LIGHT</span></div>
+          <div class="sleep-block" style="width:14%;background:rgba(0,196,160,0.35)"><span class="sleep-label">DEEP</span></div>
+          <div class="sleep-block" style="width:22%;background:rgba(77,169,255,0.15)"><span class="sleep-label">LIGHT</span></div>
+          <div class="sleep-block" style="width:17%;background:rgba(167,139,250,0.4)"><span class="sleep-label">REM</span></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+        <div style="background:var(--surface2);border-radius:10px;padding:10px 12px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px;font-family:'DM Mono',monospace">DEEP SLEEP</div>
+          <div style="font-size:20px;font-weight:700;color:var(--teal)">${pt.deepPct}%</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:10px;padding:10px 12px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px;font-family:'DM Mono',monospace">REM SLEEP</div>
+          <div style="font-size:20px;font-weight:700;color:var(--purple)">${pt.remPct}%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card section-gap">
+    <div class="card-title">AI INSIGHTS</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      ${[
+        ['🧠','HRV Declining','38ms → 28ms over 2 weeks. Elevated stress. Recommend routine stability check.','var(--rose)'],
+        ['😴','Sleep Fragmented','Deep sleep below optimal (14% vs 20% target). Night-time anxiety likely factor.','var(--amber)'],
+        ['📍','Safe Zone Adherence','No wandering incidents this week. Geofence intact. GPS check-ins normal.','var(--teal)']
+      ].map(([i,t,d,c])=>`
+      <div style="background:var(--surface2);border-radius:12px;padding:16px;border-left:3px solid ${c}">
+        <div style="font-size:20px;margin-bottom:8px">${i}</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px">${t}</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.6">${d}</div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;flex-wrap:wrap">
+    <button class="btn btn-primary" onclick="showCheckin()">🔔 Trigger Check-In</button>
+    <button class="btn btn-ghost" onclick="alert('Video call initiated')">📹 Video Call</button>
+    <button class="btn btn-ghost" onclick="showTab('alerts')">⚠️ View Alerts</button>
+    <button class="btn btn-amber" onclick="alert('SOS alert sent to all team members')">🆘 Emergency Alert</button>
+  </div>`;
+}
+
+function renderCareBiometrics(el) {
+  el.innerHTML = `
+  <div class="page-header">
+    <div class="page-eyebrow">WEARABLE DATA · PT-1001</div>
+    <div class="page-title">Live <span>Biometrics</span></div>
+  </div>
+
+  <div class="card section-gap">
+    <div class="card-title">HRV TREND — 14 DAYS</div>
+    <div class="hrv-wave">
+      <svg class="hrv-svg" viewBox="0 0 600 64" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--teal)" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="var(--teal)" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        ${(()=>{
+          const pts = hrvHistory14;
+          const max=Math.max(...pts), min=Math.min(...pts)-5;
+          const coords = pts.map((v,i)=>`${i*(600/(pts.length-1))},${64-(v-min)/(max-min)*54}`).join(' ');
+          const polyCoords = `0,64 ${coords} 600,64`;
+          return `<polygon points="${polyCoords}" fill="url(#g1)"/>
+          <polyline points="${coords}" fill="none" stroke="var(--teal)" stroke-width="2"/>
+          ${pts.map((v,i)=>`<circle cx="${i*(600/(pts.length-1))}" cy="${64-(v-min)/(max-min)*54}" r="3" fill="var(--teal)" opacity="0.8"/>`).join('')}`;
+        })()}
+      </svg>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:8px">
+      <span>14 days ago</span><span style="color:var(--rose)">⬇ Declining trend</span><span>Today</span>
+    </div>
+  </div>
+
+  <div class="grid2 section-gap">
+    <div class="card">
+      <div class="card-title">SLEEP DURATION — 14 DAYS</div>
+      <div style="display:flex;align-items:flex-end;gap:4px;height:80px;margin-top:8px">
+        ${sleepHistory14.map((v,i)=>{
+          const col = v>=6.5?'var(--teal)':v>=5?'var(--amber)':'var(--rose)';
+          return `<div style="flex:1;background:${col};border-radius:2px 2px 0 0;height:${v/9*100}%;min-height:4px;opacity:0.8;cursor:pointer" title="${v}h"></div>`;
+        }).join('')}
+      </div>
+      <div style="display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:6px">
+        <span>14d ago</span><span>Today</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">KEY BIOMETRIC STATS</div>
+      <table class="data-table">
+        <tr><td>Avg HRV (14d)</td><td><span style="color:var(--amber)">33ms</span></td></tr>
+        <tr><td>Avg Sleep</td><td><span style="color:var(--rose)">5.3h</span></td></tr>
+        <tr><td>Avg SpO₂</td><td><span style="color:var(--teal)">95.4%</span></td></tr>
+        <tr><td>Avg HR</td><td><span style="color:var(--blue)">72 bpm</span></td></tr>
+        <tr><td>Sleep Efficiency</td><td><span style="color:var(--amber)">64%</span></td></tr>
+        <tr><td>Deep Sleep %</td><td><span style="color:var(--rose)">11%</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">WATCH API INTEGRATION</div>
+    <div style="background:var(--bg);border-radius:12px;padding:20px;font-family:'DM Mono',monospace;font-size:12px;color:var(--teal);line-height:1.8;border:1px solid var(--border)">
+      <div style="color:var(--muted)">// Active watch connections</div>
+      <div><span style="color:var(--purple)">APPLE WATCH</span> → HealthKit API → HRV, Sleep, SpO₂, HR, Fall Detection</div>
+      <div><span style="color:var(--blue)">SAMSUNG GALAXY</span> → Samsung Health SDK → HRV, Sleep, Body Composition</div>
+      <div><span style="color:var(--rose)">FITBIT</span> → Fitbit Web API → Sleep Stages, HRV, Active Zone Minutes</div>
+      <div style="color:var(--muted);margin-top:8px">// Data pipeline</div>
+      <div>Watch → BLE/WiFi → Phone App → <span style="color:var(--amber)">Encrypted API</span> → Research DB</div>
+      <div>Sampling: <span style="color:var(--teal)">HRV 5min</span> · <span style="color:var(--blue)">HR 1min</span> · <span style="color:var(--purple)">SpO₂ 30min</span> · <span style="color:var(--green)">Sleep nightly</span></div>
+    </div>
+  </div>`;
+}
+
+function renderCareAlerts(el) {
+  el.innerHTML = `
+  <div class="page-header">
+    <div class="page-eyebrow">NOTIFICATIONS</div>
+    <div class="page-title">Alerts <span>& Events</span></div>
+  </div>
+  <div class="export-bar">
+    <div class="export-info"><strong>4</strong> unread alerts · <strong>3</strong> require action</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-ghost" onclick="this.closest('.export-bar').querySelectorAll('.unread').forEach(a=>{a.classList.remove('unread')})">Mark all read</button>
+    </div>
+  </div>
+  ${[
+    ['⚠️','HRV dropped below threshold — 22ms at 3:14 AM','5 min ago',true,'warn'],
+    ['😴','Poor sleep detected — 4.4h, 52% efficiency','2 hrs ago',true,'warn'],
+    ['📍','Patient within safe zone — morning walk detected','3 hrs ago',false,'info'],
+    ['🔔','No response to 11:00 AM check-in — auto-SOS sent','4 hrs ago',true,'alert'],
+    ['💊','Morning medication confirmed via voice prompt','6 hrs ago',false,'good'],
+    ['❤️','SpO₂ dipped to 91% briefly — returned to 94%','8 hrs ago',true,'warn'],
+    ['🧠','AI: Anxiety score elevated 2 consecutive nights','12 hrs ago',false,'info'],
+  ].map(([i,m,t,u,type])=>`
+  <div class="alert-item ${u?'unread':''}" onclick="this.classList.remove('unread')">
+    <div class="alert-icon">${i}</div>
+    <div style="flex:1">
+      <div class="alert-msg">${m}</div>
+      <div class="alert-time">${t}</div>
+    </div>
+    ${u?`<div class="alert-unread-dot"></div>`:''}
+  </div>`).join('')}`;
+}
+
+function renderCareTeam(el) {
+  el.innerHTML = `
+  <div class="page-header">
+    <div class="page-eyebrow">COORDINATION</div>
+    <div class="page-title">Care <span>Team</span></div>
+  </div>
+  <div class="grid2 section-gap">
+    <div class="card">
+      <div class="card-title">TEAM MEMBERS</div>
+      ${[
+        ['👨‍⚕️','Dr. Anand Mehta','Neurologist','Online','var(--green)'],
+        ['👩','Priya Thomas','Primary Caregiver','Away','var(--amber)'],
+        ['👨','Raj Kumar','Backup Caregiver','Online','var(--green)'],
+        ['👩‍⚕️','Nurse Lakshmi','Home Nurse · PM shift','Offline','var(--muted)'],
+      ].map(([e,n,r,s,c])=>`
+      <div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)">
+        <div style="width:44px;height:44px;border-radius:12px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${e}</div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:700;color:var(--text)">${n}</div>
+          <div style="font-size:12px;color:var(--muted2)">${r}</div>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:${c}">● ${s}</div>
+      </div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-title">CAREGIVER BURNOUT METER</div>
+      <div style="margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:13px;color:var(--muted2)">Your response load this week</span>
+          <span style="font-size:13px;font-weight:700;color:var(--amber)">62%</span>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:62%;background:linear-gradient(90deg,var(--teal),var(--amber))"></div></div>
+      </div>
+      <div style="background:var(--amber-dim);border:1px solid rgba(245,166,35,0.2);border-radius:12px;padding:14px;margin-bottom:14px">
+        <div style="font-size:12px;color:var(--amber);font-weight:700;margin-bottom:4px">⚠️ Moderate load detected</div>
+        <div style="font-size:12px;color:var(--muted2)">Response time up 35% vs last week. Consider delegating evening shift.</div>
+      </div>
+      <button class="btn btn-ghost" onclick="alert('Shift handoff scheduled')">📋 Schedule Shift Handoff</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">SHIFT LOG</div>
+    <table class="data-table">
+      <thead><tr><th>TIME</th><th>STAFF</th><th>EVENT</th><th>WATCH DATA</th><th>STATUS</th></tr></thead>
+      <tbody>
+        ${[
+          ['06:00','Nurse Lakshmi','Morning check-in completed','HR 66 · SpO₂ 96%','good'],
+          ['08:30','Priya Thomas','Medication administered','HRV 38ms · Calm','good'],
+          ['11:00','Priya Thomas','No check-in response — auto SOS','HR spike 88bpm','alert'],
+          ['14:00','Raj Kumar','Lunch confirmed via voice','HRV 35ms','good'],
+          ['16:30','Dr. Mehta','Weekly video review call','—','info'],
+        ].map(([t,s,e,w,st])=>`
+        <tr>
+          <td style="font-family:'DM Mono',monospace;font-size:11px">${t}</td>
+          <td>${s}</td><td>${e}</td>
+          <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${w}</td>
+          <td><span class="pill ${st}"><span class="pill-dot"></span>${st}</span></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+// ══ RESEARCHER ══════════════════════════════════════════════════════════════
+function renderCohort(el) {
+  el.innerHTML = `
+  <div class="page-header">
+    <div class="page-eyebrow">ENIGMA MULTIMODAL STUDY</div>
+    <div class="page-title">Participant <span>Cohort</span></div>
+    <div class="page-sub">N=5 active · 3 MCI · 1 Mild AD · 1 Moderate AD · All watch-connected</div>
+  </div>
+
+  <div class="grid4 section-gap">
+    ${[
+      ['5','ENROLLED','var(--teal)','teal'],
+      ['3','MCI','var(--blue)','blue'],
+      ['2','AD STAGE','var(--amber)','amber'],
+      ['100%','WATCH SYNC','var(--green)','green'],
+    ].map(([v,l,c,cl])=>`
+    <div class="metric-card ${cl}">
+      <div class="metric-label">${l}</div>
+      <div class="metric-val ${cl}">${v}</div>
+    </div>`).join('')}
+  </div>
+
+  <div class="card section-gap">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+      <div class="card-title" style="margin:0">PARTICIPANT TABLE</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost" style="font-size:12px" onclick="showTab('export')">⬇ Export CSV</button>
+        <button class="btn btn-ghost" style="font-size:12px">＋ Add Participant</button>
+      </div>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>PARTICIPANT ID</th><th>AGE/SEX</th><th>STAGE</th><th>WATCH</th>
+          <th>HRV (ms)</th><th>SLEEP (h)</th><th>SpO₂</th><th>STRESS</th><th>STATUS</th><th>SYNC</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${participants.map(p=>`
+        <tr style="cursor:pointer" onclick="showParticipant('${p.id}')">
+          <td style="font-family:'DM Mono',monospace">${p.id}</td>
+          <td>${p.age} / ${p.sex}</td>
+          <td><span class="pill ${p.stage==='Moderate AD'?'alert':p.stage==='Mild AD'?'warn':'info'}"><span class="pill-dot"></span>${p.stage}</span></td>
+          <td style="font-size:12px;color:var(--muted2)">${p.watch.split(' ').slice(0,2).join(' ')}</td>
+          <td style="color:${p.hrv<25?'var(--rose)':p.hrv<35?'var(--amber)':'var(--teal)'};font-family:'DM Mono',monospace">${p.hrv}</td>
+          <td style="color:${p.sleep<5?'var(--rose)':p.sleep<6?'var(--amber)':'var(--teal)'};;font-family:'DM Mono',monospace">${p.sleep}</td>
+          <td style="font-family:'DM Mono',monospace">${p.spo2}%</td>
+          <td><span class="pill ${p.stress==='High'?'alert':p.stress==='Moderate'?'warn':'good'}">${p.stress}</span></td>
+          <td><span class="pill ${p.status}">${p.status}</span></td>
+          <td style="font-size:11px;color:var(--muted);font-family:'DM Mono',monospace">${p.lastSync}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    <div style="margin-top:12px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">Click any row to view full participant data</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">COHORT BIOMETRIC AVERAGES</div>
+    <div class="grid3">
+      ${[
+        ['Avg HRV','36.2 ms','var(--teal)'],
+        ['Avg Sleep','5.92 h','var(--purple)'],
+        ['Avg SpO₂','95.4%','var(--blue)'],
+        ['Avg HR','70.2 bpm','var(--rose)'],
+        ['Avg Sleep Eff','69.4%','var(--amber)'],
+        ['Avg Deep Sleep','13.2%','var(--green)'],
+      ].map(([l,v,c])=>`
+      <div style="background:var(--surface2);border-radius:12px;padding:14px;border:1px solid var(--border)">
+        <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px">${l}</div>
+        <div style="font-size:24px;font-weight:800;color:${c}">${v}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function showParticipant(id) {
+  const p = participants.find(x=>x.id===id);
+  if (!p) return;
+  const el = document.getElementById('researcherView');
+  el.innerHTML = `
+  <div style="margin-bottom:20px">
+    <button class="btn btn-ghost" onclick="showTab('cohort')">← Back to Cohort</button>
+  </div>
+  <div class="participant-detail">
+    <div class="participant-sidebar">
+      <div class="p-avatar">🧓</div>
+      <div class="p-id">${p.id}</div>
+      <div class="p-meta">
+        Age: ${p.age}<br/>Sex: ${p.sex}<br/>Stage: ${p.stage}<br/>
+        Weeks enrolled: ${p.weeks}<br/>
+        Watch: ${p.watch}<br/>
+        Last sync: ${p.lastSync}
+      </div>
+      <div style="margin-top:16px">
+        <span class="pill ${p.status}" style="margin-bottom:8px;display:inline-flex">${p.status}</span>
+      </div>
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:8px">
+        <button class="btn btn-ghost" style="width:100%;font-size:12px" onclick="showTab('export')">⬇ Export Data</button>
+        <button class="btn btn-ghost" style="width:100%;font-size:12px">📋 Notes</button>
+      </div>
+    </div>
+    <div>
+      <div class="page-header">
+        <div class="page-eyebrow">PARTICIPANT DETAIL</div>
+        <div class="page-title">${p.id} · <span>${p.stage}</span></div>
+      </div>
+      <div class="grid4 section-gap">
+        <div class="metric-card teal"><div class="metric-label">HRV</div><div class="metric-val teal">${p.hrv}</div><div class="metric-sub">ms</div></div>
+        <div class="metric-card purple"><div class="metric-label">SLEEP</div><div class="metric-val purple">${p.sleep}<span style="font-size:16px">h</span></div><div class="metric-sub">${p.sleepEff}% eff.</div></div>
+        <div class="metric-card blue"><div class="metric-label">SpO₂</div><div class="metric-val blue">${p.spo2}%</div></div>
+        <div class="metric-card ${p.stress==='High'?'rose':p.stress==='Moderate'?'amber':'green'}"><div class="metric-label">STRESS</div><div class="metric-val ${p.stress==='High'?'rose':p.stress==='Moderate'?'amber':'green'}">${p.stress}</div></div>
+      </div>
+      <div class="card section-gap">
+        <div class="card-title">HRV TREND (SIMULATED · ${p.weeks} WEEKS)</div>
+        <div class="hrv-wave" style="height:80px">
+          <svg class="hrv-svg" viewBox="0 0 600 80" preserveAspectRatio="none">
+            ${(()=>{
+              const base = p.hrv;
+              const pts = Array.from({length:p.weeks},(_, i)=>Math.max(10, base + (p.weeks-i)*0.8 + (Math.sin(i*0.7)*4)));
+              const max=Math.max(...pts)+5, min=Math.min(...pts)-5;
+              const coords = pts.map((v,i)=>`${i*(600/(pts.length-1))},${80-(v-min)/(max-min)*70}`).join(' ');
+              return `<defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="var(--teal)" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="var(--teal)" stop-opacity="0"/>
+              </linearGradient></defs>
+              <polygon points="0,80 ${coords} 600,80" fill="url(#g2)"/>
+              <polyline points="${coords}" fill="none" stroke="var(--teal)" stroke-width="2"/>`;
+            })()}
+          </svg>
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);margin-top:8px">Enrollment → Week ${p.weeks} · Declining trajectory indicates stress accumulation</div>
+      </div>
+      <div class="card">
+        <div class="card-title">SLEEP BREAKDOWN</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+          ${[
+            ['Total',p.sleep+'h','var(--purple)'],
+            ['Deep',p.deepPct+'%','var(--teal)'],
+            ['REM',p.remPct+'%','var(--blue)'],
+            ['Efficiency',p.sleepEff+'%','var(--amber)'],
+          ].map(([l,v,c])=>`
+          <div style="background:var(--surface2);border-radius:12px;padding:14px;text-align:center;border:1px solid var(--border)">
+            <div style="font-size:10px;color:var(--muted);font-family:'DM Mono',monospace;margin-bottom:6px">${l}</div>
+            <div style="font-size:22px;font-weight:800;color:${c}">${v}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderResearchBio(el) {
+  el.innerHTML = `
+  <div class="page-header">
+    <div class="page-eyebrow">COHORT BIOMETRICS · ALL PARTICIPANTS</div>
+    <div class="page-title">Watch <span>Data Overview</span></div>
+  </div>
+
+  <div class="card section-gap">
+    <div class="card-title">HRV BY PARTICIPANT — CURRENT WEEK AVERAGE</div>
+    <div style="display:flex;align-items:flex-end;gap:12px;height:100px;margin-bottom:12px">
+      ${participants.map(p=>{
+        const col = p.hrv<25?'var(--rose)':p.hrv<35?'var(--amber)':'var(--teal)';
+        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;color:${col}">${p.hrv}ms</div>
+          <div style="width:100%;background:${col};border-radius:4px 4px 0 0;height:${p.hrv/55*80}px;opacity:0.85"></div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">${p.id.split('-')[1]}</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div style="display:flex;gap:16px;font-size:11px;flex-wrap:wrap">
+      <span style="color:var(--teal)">● HRV ≥35ms Good</span>
+      <span style="color:var(--amber)">● HRV 25–34ms Moderate</span>
+      <span style="color:var(--rose)">● HRV &lt;25ms Poor</span>
+    </div>
+  </div>
+
+  <div class="grid2 section-gap">
+    <div class="card">
+      <div class="card-title">SLEEP DURATION BY PARTICIPANT</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
+        ${participants.map(p=>{
+          const col = p.sleep<5?'var(--rose)':p.sleep<6.5?'var(--amber)':'var(--teal)';
+          return `<div>
+            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px">
+              <span style="font-family:'DM Mono',monospace;color:var(--muted2)">${p.id}</span>
+              <span style="color:${col};font-family:'DM Mono',monospace">${p.sleep}h</span>
+            </div>
+            <div class="progress-track"><div class="progress-fill" style="width:${p.sleep/9*100}%;background:${col}"></div></div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">SpO₂ READINGS</div>
+      <table class="data-table">
+        <thead><tr><th>PARTICIPANT</th><th>SpO₂</th><th>STATUS</th></tr></thead>
+        <tbody>
+          ${participants.map(p=>`
+          <tr>
+            <td style="font-family:'DM Mono',monospace;font-size:12px">${p.id}</td>
+            <td style="font-family:'DM Mono',monospace;color:${p.spo2<94?'var(--rose)':p.spo2<96?'var(--amber)':'var(--teal)'}">${p.spo2}%</td>
+            <td><span class="pill ${p.spo2<94?'alert':p.spo2<96?'warn':'good'}">${p.spo2<94?'Low':p.spo2<96?'Normal':'Good'}</span></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">CORRELATION MATRIX — BIOMETRICS × COGNITION</div>
+    <div style="overflow-x:auto">
+      ${(()=>{
+        const vars = ['HRV','Sleep','SpO₂','HR','MoCA','CDR'];
+        const vals = [
+          [1.0, 0.64, 0.41, -0.52, 0.71, -0.68],
+          [0.64, 1.0, 0.38, -0.44, 0.59, -0.61],
+          [0.41, 0.38, 1.0, -0.31, 0.48, -0.44],
+          [-0.52,-0.44,-0.31, 1.0, -0.63, 0.58],
+          [0.71, 0.59, 0.48,-0.63, 1.0, -0.82],
+          [-0.68,-0.61,-0.44, 0.58,-0.82, 1.0],
+        ];
+        const getColor = v => {
+          if (v>=0.6) return `rgba(0,196,160,${v*0.7})`;
+          if (v>=0.3) return `rgba(77,169,255,${v*0.6})`;
+          if (v<=-0.6) return `rgba(255,107,138,${Math.abs(v)*0.7})`;
+          if (v<=-0.3) return `rgba(245,166,35,${Math.abs(v)*0.6})`;
+          return `rgba(255,255,255,0.04)`;
+        };
+        return `<table style="border-collapse:separate;border-spacing:4px;margin-top:8px">
+          <tr><td></td>${vars.map(v=>`<td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);padding:4px 8px;text-align:center">${v}</td>`).join('')}</tr>
+          ${vals.map((row,i)=>`<tr>
+            <td style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);padding:4px 8px;white-space:nowrap">${vars[i]}</td>
+            ${row.map((v,j)=>`<td style="width:60px;height:44px;background:${getColor(v)};border-radius:6px;text-align:center;font-family:'DM Mono',monospace;font-size:11px;color:${Math.abs(v)>0.5?'var(--text)':'var(--muted2)'};cursor:default" title="${vars[i]} × ${vars[j]}: r=${v}">${v.toFixed(2)}</td>`).join('')}
+          </tr>`).join('')}
+        </table>
+        <div style="margin-top:12px;font-size:12px;color:var(--muted2)">
+          <span style="color:var(--teal)">■ Strong positive</span>&nbsp;&nbsp;
+          <span style="color:var(--blue)">■ Moderate positive</span>&nbsp;&nbsp;
+          <span style="color:var(--rose)">■ Strong negative</span>&nbsp;&nbsp;
+          <span style="color:var(--amber)">■ Moderate negative</span>
+          &nbsp;&nbsp;·&nbsp;&nbsp;Hover cells for values
+        </div>`;
+      })()}
+    </div>
+  </div>`;
+}
+
+function renderLongitudinal(el) {
+  el.innerHTML = `
+  <div class="page-header">
+    <div class="page-eyebrow">LONGITUDINAL ANALYSIS</div>
+    <div class="page-title">Trends <span>Over Time</span></div>
+    <div class="page-sub">HRV, sleep, and mood trajectories across the study period</div>
+  </div>
+
+  <div class="card section-gap">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+      <div class="card-title" style="margin:0">GROUP HRV TRAJECTORY · 14 WEEKS</div>
+      <div style="display:flex;gap:8px">
+        ${['4w','8w','12w','16w','All'].map((t,i)=>`<button style="background:${i===4?'var(--teal)':'var(--surface2)'};color:${i===4?'#000':'var(--muted2)'};border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:11px;cursor:pointer;font-family:'Syne',sans-serif;font-weight:600" onclick="alert('Filter: ${t}')">${t}</button>`).join('')}
+      </div>
+    </div>
+    <div style="height:140px;position:relative;margin-bottom:8px">
+      <svg width="100%" height="100%" viewBox="0 0 800 140" preserveAspectRatio="none">
+        <defs>
+          ${['teal','blue','amber','rose','green'].map((c,i)=>`
+          <linearGradient id="lg${i}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--${c})" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="var(--${c})" stop-opacity="0"/>
+          </linearGradient>`).join('')}
+        </defs>
+        <!-- Grid lines -->
+        ${[0,35,70,105,140].map(y=>`<line x1="0" y1="${y}" x2="800" y2="${y}" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>`).join('')}
+        ${(()=>{
+          const colors = ['var(--teal)','var(--blue)','var(--amber)','var(--rose)','var(--green)'];
+          const gradIds = ['lg0','lg1','lg2','lg3','lg4'];
+          return participants.map((p,pi)=>{
+            const pts = Array.from({length:14},(_, i)=>Math.max(10, p.hrv + (13-i)*1.2 + Math.sin(i*0.8)*3));
+            const max=55, min=10;
+            const coords = pts.map((v,i)=>`${i*(800/13)},${140-(v-min)/(max-min)*120}`).join(' ');
+            return `<polyline points="${coords}" fill="none" stroke="${colors[pi]}" stroke-width="1.5" opacity="0.8"/>`;
+          }).join('');
+        })()}
+      </svg>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      ${participants.map((p,i)=>{
+        const colors=['var(--teal)','var(--blue)','var(--amber)','var(--rose)','var(--green)'];
+        return `<span style="font-size:11px;color:${colors[i]};font-family:'DM Mono',monospace">● ${p.id}</span>`;
+      }).join('')}
+    </div>
+  </div>
+
+  <div class="grid2 section-gap">
+    <div class="card">
+      <div class="card-title">MOOD × HRV CORRELATION</div>
+      <div style="background:var(--surface2);border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid var(--border)">
+        <div style="font-size:28px;font-weight:800;color:var(--teal)">r = 0.71</div>
+        <div style="font-size:12px;color:var(--muted2);margin-top:4px">Strong positive correlation between HRV and mood scores across cohort</div>
+      </div>
+      <div style="font-size:12px;color:var(--muted2);line-height:1.7">
+        Nights with HRV &lt;25ms predicted next-day agitation episodes with <strong style="color:var(--text)">78% accuracy</strong>. 
+        Sleep fragmentation (efficiency &lt;60%) correlated with mood scores below 2.5 the following day (<strong style="color:var(--text)">p&lt;0.01</strong>).
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">SLEEP → COGNITION FINDING</div>
+      <div style="background:var(--surface2);border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid var(--border)">
+        <div style="font-size:28px;font-weight:800;color:var(--purple)">r = 0.59</div>
+        <div style="font-size:12px;color:var(--muted2);margin-top:4px">Sleep duration positively correlated with MoCA scores</div>
+      </div>
+      <div style="font-size:12px;color:var(--muted2);line-height:1.7">
+        Participants averaging &lt;5h sleep showed <strong style="color:var(--text)">2.3× higher</strong> rate of confusion episodes. 
+        Deep sleep % below 12% associated with faster CDR progression over 12-week window.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">KEY FINDINGS SUMMARY</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+      ${[
+        ['📉','HRV Declining Cohort-Wide','Mean HRV dropped from 44ms → 36ms over 8 weeks. Strongest in Moderate AD group.','var(--rose)'],
+        ['😴','Sleep-Mood Nexus','Poor sleep quality (eff. <60%) preceded low-mood days in 74% of cases with 24h lag.','var(--purple)'],
+        ['📡','Watch Adherence','Average wear time 21.4h/day. Data completeness 94.2%. Highest loss: night charging.','var(--teal)'],
+      ].map(([i,t,d,c])=>`
+      <div style="background:var(--surface2);border-radius:14px;padding:18px;border-top:2px solid ${c}">
+        <div style="font-size:24px;margin-bottom:10px">${i}</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px">${t}</div>
+        <div style="font-size:12px;color:var(--muted2);line-height:1.65">${d}</div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderExport(el) {
+  el.innerHTML = `
+  <div class="page-header">
+    <div class="page-eyebrow">DATA EXPORT</div>
+    <div class="page-title">Export <span>& Download</span></div>
+    <div class="page-sub">All data de-identified · BIDS compatible</div>
+  </div>
+
+  <div class="export-bar">
+    <div class="export-info">
+      <strong>5 participants</strong> · <strong>847 watch-hours</strong> · <strong>12 weeks</strong> · Last updated 6 min ago
+    </div>
+    <div class="export-btns">
+      <button class="btn btn-primary" onclick="downloadCSV()">⬇ Download CSV</button>
+      <button class="btn btn-ghost" onclick="alert('BIDS export queued — check email in 2 minutes')">⬇ BIDS Format</button>
+      <button class="btn btn-ghost" onclick="alert('EDF export for EEG compatibility ready')">⬇ EDF</button>
+    </div>
+  </div>
+
+  <div class="grid2 section-gap">
+    <div class="card">
+      <div class="card-title">AVAILABLE DATASETS</div>
+      ${[
+        ['⌚','Watch Biometrics','HRV, HR, SpO₂, sleep stages, activity, fall events','847h','CSV / JSON'],
+        ['😊','Mood Check-Ins','45-min response data, tap patterns, message engagement','1,240 records','CSV'],
+        ['📍','GPS & Geofence','Location events, safe zone exits, wandering detection','312 events','GeoJSON'],
+        ['💊','Medication Log','Dose timing, voice confirmations, missed doses','96 records','CSV'],
+        ['🎤','Voice Transcripts','Check-in voice recordings (access-gated)','240 clips','TXT / WAV'],
+      ].map(([i,n,d,s,f])=>`
+      <div style="display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)">
+        <div style="width:40px;height:40px;border-radius:10px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:1px solid var(--border)">${i}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px">${n}</div>
+          <div style="font-size:12px;color:var(--muted2);margin-bottom:6px">${d}</div>
+          <div style="display:flex;gap:8px">
+            <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)">${s}</span>
+            <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--teal)">${f}</span>
+          </div>
+        </div>
+        <button onclick="alert('Download: ${n}')" style="background:var(--surface2);border:1px solid var(--border);color:var(--muted2);padding:6px 12px;border-radius:8px;font-size:11px;cursor:pointer;font-family:'Syne',sans-serif;white-space:nowrap">⬇ Export</button>
+      </div>`).join('')}
+    </div>
+    <div>
+      <div class="card section-gap">
+        <div class="card-title">BIDS STRUCTURE PREVIEW</div>
+        <div style="background:var(--bg);border-radius:10px;padding:16px;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted2);line-height:2;border:1px solid var(--border)">
+          <div style="color:var(--teal)">lumen-study/</div>
+          <div style="padding-left:16px">├── <span style="color:var(--text)">dataset_description.json</span></div>
+          <div style="padding-left:16px">├── <span style="color:var(--text)">participants.tsv</span></div>
+          <div style="padding-left:16px">└── <span style="color:var(--purple)">sub-PT1001/</span></div>
+          <div style="padding-left:32px">├── <span style="color:var(--blue)">beh/</span> <span style="color:var(--muted)">← mood, check-ins</span></div>
+          <div style="padding-left:32px">├── <span style="color:var(--blue)">phys/</span> <span style="color:var(--muted)">← HRV, HR, SpO₂</span></div>
+          <div style="padding-left:32px">└── <span style="color:var(--blue)">func/</span> <span style="color:var(--muted)">← sleep, activity</span></div>
+          <div style="padding-left:16px">└── <span style="color:var(--purple)">sub-PT1002/ ...</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">EXPORT SETTINGS</div>
+        ${[
+          ['Date range','Last 12 weeks'],
+          ['Participant IDs','De-identified (PT-XXXX)'],
+          ['Sampling rate','5-min epochs'],
+          ['Missing data','NaN imputation'],
+          ['Format','UTF-8 CSV / JSON'],
+          ['Protocol','Ethics pending'],
+        ].map(([k,v])=>`
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px">
+          <span style="color:var(--muted2)">${k}</span>
+          <span style="color:var(--text);font-family:'DM Mono',monospace;font-size:12px">${v}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ══ CSV DOWNLOAD ═══════════════════════════════════════════════════════════
+function downloadCSV() {
+  const headers = ['participant_id','age','sex','stage','watch_platform','hrv_ms','sleep_h','sleep_efficiency_pct','deep_sleep_pct','rem_sleep_pct','spo2_pct','hr_bpm','stress_level','weeks_enrolled'];
+  const rows = participants.map(p => [
+    p.id, p.age, p.sex, p.stage, p.watch,
+    p.hrv, p.sleep, p.sleepEff, p.deepPct, p.remPct,
+    p.spo2, p.hr, p.stress, p.weeks
+  ]);
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'lumen_cohort_export.csv';
+  a.click();
+}
+</script>
+</body>
+</html>
